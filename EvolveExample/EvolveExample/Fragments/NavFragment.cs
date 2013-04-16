@@ -14,7 +14,7 @@ using Android.Widget;
 
 using SupportListFragment = Android.Support.V4.App.ListFragment;
 
-namespace EvolveExample
+namespace EvolveExample.Fragments
 {
 	public class NavigationEventArgs : EventArgs
 	{
@@ -37,10 +37,15 @@ namespace EvolveExample
 		{
 		}
 
+		public override void OnViewStateRestored (Bundle savedInstanceState)
+		{
+			base.OnViewStateRestored (savedInstanceState);
+			ListAdapter = new ArrayAdapter(Activity, Resource.Layout.nav_item, nav_options);
+		}
+
 		public override void OnResume ()
 		{
 			base.OnResume ();
-			ListAdapter = new ArrayAdapter(Activity, Resource.Layout.nav_item, nav_options);
 			ListView.ItemClick += listview_ItemClick;
 		}
 

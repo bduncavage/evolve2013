@@ -14,7 +14,7 @@ using Android.Widget;
 
 using SupportFragment = Android.Support.V4.App.Fragment;
 
-namespace EvolveExample
+namespace EvolveExample.Fragments
 {
 	public class ImageFragment : SupportFragment
 	{

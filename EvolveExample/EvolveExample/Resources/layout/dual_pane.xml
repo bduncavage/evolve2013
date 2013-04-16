@@ -7,12 +7,10 @@
     <FrameLayout
         android:id="@+id/nav_fragment_container"
         android:layout_width="@dimen/nav_width"
-        android:layout_height="match_parent"
-        android:layout_marginTop="40dp" />
+        android:layout_height="match_parent" />
     <FrameLayout
         android:id="@+id/content_fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="40dp"
         android:layout_marginRight="10dp" />
 </LinearLayout>

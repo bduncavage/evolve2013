@@ -1,14 +1,16 @@
 using System;
 
 using Android.App;
-using Android.Content;
-using Android.Runtime;
+using Android.OS;
 using Android.Views;
 using Android.Widget;
-using Android.OS;
+
+using EvolveExample.Fragments;
 
 using SupportFragmentActivity = Android.Support.V4.App.FragmentActivity;
 using SupportFragmentManager = Android.Support.V4.App.FragmentManager;
+using EvolveExample.Services;
+using Android.Content;
 
 namespace EvolveExample
 {
@@ -45,6 +47,11 @@ namespace EvolveExample
 			transaction.Commit();
 
 			nav.NavigationItemActivated += nav_NavigationItemSelected;
+
+			// start our master service
+			// We could alternatively start this from our Application class
+			var intent = new Intent(this, typeof(MasterService));
+			StartService(intent);
 		}
 
 		protected override void OnDestroy ()
@@ -64,16 +71,19 @@ namespace EvolveExample
 			}
 
 			var containerResId = 0;
-
+			var transitionType = FragmentTransit.None;
 			if (didChange) {
 				if (is_dual_pane) {
+					transitionType = FragmentTransit.FragmentFade;
 					containerResId = Resource.Id.content_fragment_container;
 				} else {
+					transitionType = FragmentTransit.FragmentOpen;
 					addToBackStack = true;
 					containerResId = Resource.Id.fragment_container;
 				}
 
 				var transaction = SupportFragmentManager.BeginTransaction();
+				transaction.SetTransition((int)transitionType);
 
 				if (current_nav_position == 0) {
 					grid_fragment = grid_fragment ?? new GridFragment();
