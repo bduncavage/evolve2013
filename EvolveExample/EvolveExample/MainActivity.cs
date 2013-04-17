@@ -24,6 +24,8 @@ namespace EvolveExample
 		bool is_dual_pane;
 		private int current_nav_position = -1;
 
+        #region lifecycle
+
 		protected override void OnCreate (Bundle bundle)
 		{
 			base.OnCreate (bundle);
@@ -54,11 +56,35 @@ namespace EvolveExample
 			StartService(intent);
 		}
 
+        protected override void OnResume()
+        {
+            base.OnResume ();
+            UpdateServiceForeground(true);
+        }
+
+        protected override void OnPause()
+        {
+            base.OnPause ();
+            UpdateServiceForeground(false);
+        }
+             
+
 		protected override void OnDestroy ()
 		{
 			base.OnDestroy ();
 			nav.NavigationItemActivated -= nav_NavigationItemSelected;
 		}
+
+        #endregion
+
+        #region private methods
+
+        private void UpdateServiceForeground(bool isForeground)
+        {
+            if (MasterService.Instance != null) {
+                MasterService.Instance.UpdateForegroundState(isForeground);
+            }
+        }
 
 		private void nav_NavigationItemSelected(object sender, NavigationEventArgs args)
 		{
@@ -103,6 +129,8 @@ namespace EvolveExample
 				transaction.Commit();
 			}
 		}
+
+        #endregion
 	}
 }
 

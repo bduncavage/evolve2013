@@ -30,11 +30,7 @@ namespace EvolveExample.Services
             ping_interval = pingInterval;
             master_service = masterService;
 
-            var alarmManager = (AlarmManager)master_service.GetSystemService(Context.AlarmService);
-            var pingIntent = new Intent(MasterService.MASTER_SERVICE_INTENT_FILTER);
-            pingIntent.PutExtra(PING_SERVICE_EXTRA, true);
-            repeating_pending_intent = PendingIntent.GetService(master_service, -1, pingIntent, PendingIntentFlags.UpdateCurrent);
-            alarmManager.SetInexactRepeating(AlarmType.Rtc, DateTime.UtcNow.Millisecond, ping_interval, repeating_pending_intent);
+            StartPinging();
         }
 
         #region IPluginService implementation
@@ -69,6 +65,7 @@ namespace EvolveExample.Services
                     data["android_sdk_int"] = Build.VERSION.SdkInt.ToString();
 
                     try {
+                        // obviously, this does nothing, but illustrates the point.
                         var response = wb.UploadValues("http://xamarin.com", "POST", data);
                         Android.Util.Log.Info(TAG, "Finished ping, response was: {0}", Encoding.ASCII.GetString(response));
                         // show a toast
@@ -88,18 +85,37 @@ namespace EvolveExample.Services
             });
         }
 
-        public void OnDestroy()
+        private void StartPinging()
+        {
+            var alarmManager = (AlarmManager)master_service.GetSystemService(Context.AlarmService);
+            var pingIntent = new Intent(MasterService.MASTER_SERVICE_INTENT_FILTER);
+            pingIntent.PutExtra(PING_SERVICE_EXTRA, true);
+            repeating_pending_intent = PendingIntent.GetService(master_service, -1, pingIntent, PendingIntentFlags.UpdateCurrent);
+            alarmManager.SetInexactRepeating(AlarmType.Rtc, DateTime.UtcNow.Millisecond, ping_interval, repeating_pending_intent);
+        }
+
+        private void StopPinging()
         {
             var alarmManager = (AlarmManager)master_service.GetSystemService(Context.AlarmService);
             alarmManager.Cancel(repeating_pending_intent);
             repeating_pending_intent.Cancel();
-            master_service = null;
+
             repeating_pending_intent = null;
+        }
+
+        public void OnDestroy()
+        {
+            StopPinging();
+            master_service = null;
         }
 
         public void OnForegroundStateChanged(bool isForeground)
         {
-            // TODO: Don't do ping if not foreground.
+            if (isForeground) {
+                StartPinging();
+            } else {
+                StopPinging();
+            }
         }
 
         #endregion

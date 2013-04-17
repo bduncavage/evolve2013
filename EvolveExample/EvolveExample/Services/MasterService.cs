@@ -20,16 +20,25 @@ namespace EvolveExample.Services
 	public class MasterService : Service
 	{
 		public const string MASTER_SERVICE_INTENT_FILTER = "com.myapp.services.MasterService";
+        // obviously, this is a crazy small interval
+        // consider using AlarmManager.IntervalDay in a real-world situation
         private readonly long PING_INTERVAL = 7000;
+
+        private static MasterService instance;
+        public static MasterService Instance { get { return instance; } }
 
 		private HashSet<IPluginService> plugins;
 		private LocalBinder local_binder;
+
+        #region lifecycle
 
 		public override void OnCreate()
 		{
 			base.OnCreate();
 
 			local_binder = new LocalBinder(this);
+
+            instance = this;
 
             plugins = new HashSet<IPluginService> {
                 new DevicePingPluginService(this, PING_INTERVAL),
@@ -59,6 +68,9 @@ namespace EvolveExample.Services
 		public override void OnDestroy()
 		{
 			base.OnDestroy();
+
+            instance = null;
+
 			HashSet<IPluginService> localPlugins = null;
 			lock (plugins) {
 				localPlugins = plugins;
@@ -67,6 +79,21 @@ namespace EvolveExample.Services
 				plugin.OnDestroy();
 			}
 		}
+
+        #endregion
+
+        #region public API
+
+        public void UpdateForegroundState(bool isForeground)
+        {
+            HashSet<IPluginService> localPlugins = null;
+            lock (plugins) {
+                localPlugins = plugins;
+            }
+            foreach(var plugin in localPlugins) {
+                plugin.OnForegroundStateChanged(isForeground);
+            }
+        }
 
 		public void RegisterPlugin(IPluginService plugin)
 		{
@@ -81,6 +108,8 @@ namespace EvolveExample.Services
 				plugins.Remove(plugin);
 			}
 		}
+
+        #endregion
 
 		private class LocalBinder : Binder
 		{
