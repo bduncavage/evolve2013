@@ -16,41 +16,41 @@ using SupportFragment = Android.Support.V4.App.Fragment;
 
 namespace EvolveExample.Fragments
 {
-	public class ImageFragment : SupportFragment
-	{
-		private int drawable_res_id = 0;
+    public class ImageFragment : SupportFragment
+    {
+        private int drawable_res_id = 0;
 
-		public ImageFragment() : base()
-		{
-		}
+        public ImageFragment() : base()
+        {
+        }
 
-		public ImageFragment(int drawableResId) : base()
-		{
-			drawable_res_id = drawableResId;
-		}
+        public ImageFragment(int drawableResId) : base()
+        {
+            drawable_res_id = drawableResId;
+        }
 
-		public override void OnCreate (Bundle savedInstanceState)
-		{
-			base.OnCreate (savedInstanceState);
-			if (savedInstanceState != null) {
-				drawable_res_id = savedInstanceState.GetInt("drawable_res_id", 0);
-			}
-		}
+        public override void OnCreate (Bundle savedInstanceState)
+        {
+            base.OnCreate (savedInstanceState);
+            if (savedInstanceState != null) {
+                drawable_res_id = savedInstanceState.GetInt("drawable_res_id", 0);
+            }
+        }
 
-		public override View OnCreateView (LayoutInflater inflater, ViewGroup parent, Bundle data)
-		{
-			var view = inflater.Inflate(Resource.Layout.image, parent, false);
-			if (drawable_res_id > 0) {
-				view.FindViewById<ImageView>(Resource.Id.image_view).SetImageDrawable(Resources.GetDrawable(drawable_res_id));
-			}
-			return view;
-		}
+        public override View OnCreateView (LayoutInflater inflater, ViewGroup parent, Bundle data)
+        {
+            var view = inflater.Inflate(Resource.Layout.image, parent, false);
+            if (drawable_res_id > 0) {
+                view.FindViewById<ImageView>(Resource.Id.image_view).SetImageDrawable(Resources.GetDrawable(drawable_res_id));
+            }
+            return view;
+        }
 
-		public override void OnSaveInstanceState (Bundle savedInstanceState)
-		{
-			base.OnSaveInstanceState (savedInstanceState);
-			savedInstanceState.PutInt("drawable_res_id", drawable_res_id);
-		}
-	}
+        public override void OnSaveInstanceState (Bundle savedInstanceState)
+        {
+            base.OnSaveInstanceState (savedInstanceState);
+            savedInstanceState.PutInt("drawable_res_id", drawable_res_id);
+        }
+    }
 }
 

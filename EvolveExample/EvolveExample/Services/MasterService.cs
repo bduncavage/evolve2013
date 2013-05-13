@@ -7,19 +7,26 @@ using Android.OS;
 
 namespace EvolveExample.Services
 {
-	public interface IPluginService
-	{
-		void HandleStartCommand(Intent intent, int startId);
-		void HandleCommand(Intent intent);
-		void OnDestroy();
-		void OnForegroundStateChanged(bool isForeground);
-	}
+    public interface IPluginService
+    {
+        void HandleStartCommand(Intent intent, int startId);
+        void HandleCommand(Intent intent);
+        void OnDestroy();
+        void OnForegroundStateChanged(bool isForeground);
+    }
 
-	[Service]
-	[IntentFilter (new[] { MASTER_SERVICE_INTENT_FILTER })]
-	public class MasterService : Service
-	{
-		public const string MASTER_SERVICE_INTENT_FILTER = "com.myapp.services.MasterService";
+    [Service]
+    [IntentFilter (new[] { MASTER_SERVICE_INTENT_FILTER })]
+    /*
+     * Running a single service that proxies events to plugins is a nice
+     * way to have effectively multiple services running in a single service.
+     * This is beneficial because Android will show your app as having only
+     * one running service instead of N running services. Users are generally
+     * not happy about an app that is reported as running 5 services, for exmaple.
+     */
+    public class MasterService : Service
+    {
+        public const string MASTER_SERVICE_INTENT_FILTER = "com.myapp.services.MasterService";
         // obviously, this is a crazy small interval
         // consider using AlarmManager.IntervalDay in a real-world situation
         private readonly long PING_INTERVAL = 7000;
@@ -27,58 +34,58 @@ namespace EvolveExample.Services
         private static MasterService instance;
         public static MasterService Instance { get { return instance; } }
 
-		private HashSet<IPluginService> plugins;
-		private LocalBinder local_binder;
+        private HashSet<IPluginService> plugins;
+        private LocalBinder local_binder;
 
         #region lifecycle
 
-		public override void OnCreate()
-		{
-			base.OnCreate();
+        public override void OnCreate()
+        {
+            base.OnCreate();
 
-			local_binder = new LocalBinder(this);
+            local_binder = new LocalBinder(this);
 
             instance = this;
 
             plugins = new HashSet<IPluginService> {
                 new DevicePingPluginService(this, PING_INTERVAL),
             };
-		}
+        }
 
-		public override StartCommandResult OnStartCommand(Intent intent, StartCommandFlags flags, int startId)
-		{
+        public override StartCommandResult OnStartCommand(Intent intent, StartCommandFlags flags, int startId)
+        {
             HashSet<IPluginService> localPlugins = null;
             lock (plugins) {
                 localPlugins = plugins;
             }
-			foreach (var plugin in localPlugins) {
-				plugin.HandleStartCommand(intent, startId);
-			}
+            foreach (var plugin in localPlugins) {
+                plugin.HandleStartCommand(intent, startId);
+            }
 
-			return StartCommandResult.NotSticky;
-		}
+            return StartCommandResult.NotSticky;
+        }
 
-		public override IBinder OnBind(Intent intent)
-		{
-			// This service is meant to run in the same process as our activity
-			// so we can return a reference to it.
-			return (IBinder)local_binder;
-		}
+        public override IBinder OnBind(Intent intent)
+        {
+            // This service is meant to run in the same process as our activity
+            // so we can return a reference to it.
+            return (IBinder)local_binder;
+        }
 
-		public override void OnDestroy()
-		{
-			base.OnDestroy();
+        public override void OnDestroy()
+        {
+            base.OnDestroy();
 
             instance = null;
 
-			HashSet<IPluginService> localPlugins = null;
-			lock (plugins) {
-				localPlugins = plugins;
-			}
-			foreach (var plugin in localPlugins) {
-				plugin.OnDestroy();
-			}
-		}
+            HashSet<IPluginService> localPlugins = null;
+            lock (plugins) {
+                localPlugins = plugins;
+            }
+            foreach (var plugin in localPlugins) {
+                plugin.OnDestroy();
+            }
+        }
 
         #endregion
 
@@ -95,35 +102,35 @@ namespace EvolveExample.Services
             }
         }
 
-		public void RegisterPlugin(IPluginService plugin)
-		{
-			lock (plugins) {
-				plugins.Add(plugin);
-			}
-		}
+        public void RegisterPlugin(IPluginService plugin)
+        {
+            lock (plugins) {
+                plugins.Add(plugin);
+            }
+        }
 
-		public void UnregisterPlugin(IPluginService plugin)
-		{
-			lock (plugins) {
-				plugins.Remove(plugin);
-			}
-		}
+        public void UnregisterPlugin(IPluginService plugin)
+        {
+            lock (plugins) {
+                plugins.Remove(plugin);
+            }
+        }
 
         #endregion
 
-		private class LocalBinder : Binder
-		{
-			private MasterService master_service;
+        private class LocalBinder : Binder
+        {
+            private MasterService master_service;
 
-			public LocalBinder(MasterService masterService)
-			{
-				master_service = masterService;
-			}
+            public LocalBinder(MasterService masterService)
+            {
+                master_service = masterService;
+            }
 
-			public  MasterService Service {
-				get { return master_service; }
-			}
-		}
-	}
+            public  MasterService Service {
+                get { return master_service; }
+            }
+        }
+    }
 }
 
