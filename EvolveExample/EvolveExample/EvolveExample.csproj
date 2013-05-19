@@ -63,7 +63,6 @@
     <AndroidResource Include="Resources\drawable\Icon.png" />
     <AndroidResource Include="Resources\layout\dual_pane.xml" />
     <AndroidResource Include="Resources\values\layouts.xml" />
-    <AndroidResource Include="Resources\layout\nav.xml" />
     <AndroidResource Include="Resources\layout\nav_item.xml" />
     <AndroidResource Include="Resources\values-large-land\layouts.xml" />
     <AndroidResource Include="Resources\values-sw600dp-land\layouts.xml" />

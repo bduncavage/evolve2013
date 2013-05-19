@@ -19,9 +19,9 @@ namespace EvolveExample
 	public partial class Resource
 	{
 		
-		Resource()
+		static Resource()
 		{
-			global::Android.Runtime.ResourceIdManager.UpdateIdValues ();
+			global::Android.Runtime.ResourceIdManager.UpdateIdValues();
 		}
 		
 		public static void UpdateIdValues()
@@ -30,6 +30,11 @@ namespace EvolveExample
 		
 		public partial class Attribute
 		{
+			
+			static Attribute()
+			{
+				global::Android.Runtime.ResourceIdManager.UpdateIdValues();
+			}
 			
 			private Attribute()
 			{
@@ -42,6 +47,11 @@ namespace EvolveExample
 			// aapt resource value: 0x7f060000
 			public const int has_two_panes = 2131099648;
 			
+			static Boolean()
+			{
+				global::Android.Runtime.ResourceIdManager.UpdateIdValues();
+			}
+			
 			private Boolean()
 			{
 			}
@@ -53,6 +63,11 @@ namespace EvolveExample
 			// aapt resource value: 0x7f040000
 			public const int content_background = 2130968576;
 			
+			static Color()
+			{
+				global::Android.Runtime.ResourceIdManager.UpdateIdValues();
+			}
+			
 			private Color()
 			{
 			}
@@ -63,6 +78,11 @@ namespace EvolveExample
 			
 			// aapt resource value: 0x7f050000
 			public const int nav_width = 2131034112;
+			
+			static Dimension()
+			{
+				global::Android.Runtime.ResourceIdManager.UpdateIdValues();
+			}
 			
 			private Dimension()
 			{
@@ -81,6 +101,11 @@ namespace EvolveExample
 			// aapt resource value: 0x7f020002
 			public const int xamarin = 2130837506;
 			
+			static Drawable()
+			{
+				global::Android.Runtime.ResourceIdManager.UpdateIdValues();
+			}
+			
 			private Drawable()
 			{
 			}
@@ -92,8 +117,8 @@ namespace EvolveExample
 			// aapt resource value: 0x7f080002
 			public const int content_fragment_container = 2131230722;
 			
-			// aapt resource value: 0x7f080006
-			public const int fragment_container = 2131230726;
+			// aapt resource value: 0x7f080005
+			public const int fragment_container = 2131230725;
 			
 			// aapt resource value: 0x7f080000
 			public const int frags = 2131230720;
@@ -107,8 +132,10 @@ namespace EvolveExample
 			// aapt resource value: 0x7f080001
 			public const int nav_fragment_container = 2131230721;
 			
-			// aapt resource value: 0x7f080005
-			public const int nav_list = 2131230725;
+			static Id()
+			{
+				global::Android.Runtime.ResourceIdManager.UpdateIdValues();
+			}
 			
 			private Id()
 			{
@@ -130,17 +157,19 @@ namespace EvolveExample
 			// aapt resource value: 0x7f030003
 			public const int image = 2130903043;
 			
-			// aapt resource value: 0x7f030007
-			public const int main_layout = 2130903047;
+			// aapt resource value: 0x7f030006
+			public const int main_layout = 2130903046;
 			
 			// aapt resource value: 0x7f030004
-			public const int nav = 2130903044;
+			public const int nav_item = 2130903044;
 			
 			// aapt resource value: 0x7f030005
-			public const int nav_item = 2130903045;
+			public const int single_pane = 2130903045;
 			
-			// aapt resource value: 0x7f030006
-			public const int single_pane = 2130903046;
+			static Layout()
+			{
+				global::Android.Runtime.ResourceIdManager.UpdateIdValues();
+			}
 			
 			private Layout()
 			{
@@ -155,6 +184,11 @@ namespace EvolveExample
 			
 			// aapt resource value: 0x7f070000
 			public const int hello = 2131165184;
+			
+			static String()
+			{
+				global::Android.Runtime.ResourceIdManager.UpdateIdValues();
+			}
 			
 			private String()
 			{
