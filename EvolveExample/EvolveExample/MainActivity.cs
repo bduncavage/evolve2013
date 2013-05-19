@@ -97,7 +97,7 @@ namespace EvolveExample
 
             var containerResId = 0;
             var transitionType = FragmentTransit.None;
-            if (didChange) {
+            if (didChange || !is_dual_pane) {
                 if (is_dual_pane) {
                     transitionType = FragmentTransit.FragmentFade;
                     containerResId = Resource.Id.content_fragment_container;
