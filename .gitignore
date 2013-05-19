@@ -2,3 +2,4 @@
 *.userprefs
 obj/
 bin/
+Resource.designer.cs
